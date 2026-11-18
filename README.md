@@ -6,4 +6,15 @@ This is a simple app, that will show in your "Share" menu, and just will replace
 
 DEMO: https://vxtwitter.com/bielarusajed/status/2005302880417595540
 
-You can download APK from Github Action Artifact: https://github.com/bielarusajed/share-as-vxtwitter/actions/runs/20556187300 (you have to sign in to be able to download).
+Download the APK from the [latest release](https://github.com/bielarusajed/share-as-vxtwitter/releases/latest). No GitHub sign-in is required. The app requires Android 7.0 or newer.
+
+## Releases
+
+Publishing a GitHub release automatically builds a signed release APK and attaches it, along with a SHA-256 checksum, to that release. The release tag must match `versionName` in `app/build.gradle.kts`, prefixed with `v`, for example `v1.0.0`. For each new version, update `versionName` and increase `versionCode` before creating the tag and publishing the release.
+
+The release workflow uses two repository Actions secrets:
+
+- `ANDROID_KEYSTORE_BASE64`: the base64-encoded release keystore, with a key named `release`.
+- `ANDROID_KEYSTORE_PASSWORD`: the password for both the keystore and its key.
+
+Keep a private backup of the keystore and password. Future APKs must use the same signing key so Android can install them as updates. If you installed an older debug APK from Actions, uninstall it before installing the release APK.
