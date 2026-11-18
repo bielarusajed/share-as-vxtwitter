@@ -3,12 +3,18 @@ name: Release APK
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to rebuild, for example v1.0.0
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.event.release.tag_name }}
+  group: release-${{ github.event.release.tag_name || inputs.tag }}
   cancel-in-progress: false
 
 jobs:
@@ -18,13 +24,14 @@ jobs:
     permissions:
       contents: write
     env:
-      RELEASE_TAG: ${{ github.event.release.tag_name }}
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
       BUILD_TOOLS_VERSION: '36.0.0'
 
     steps:
       - name: Check out the release tag
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
           persist-credentials: false
 
       - name: Validate the release version
@@ -46,6 +53,11 @@ jobs:
           java-version: '17'
           distribution: temurin
           cache: gradle
+
+      - name: Set up the Android SDK
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+        with:
+          log-accepted-android-sdk-licenses: false
 
       - name: Install Android SDK packages
         run: sdkmanager "platforms;android-36" "build-tools;$BUILD_TOOLS_VERSION"

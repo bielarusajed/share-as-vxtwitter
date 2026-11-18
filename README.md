@@ -12,6 +12,8 @@ Download the APK from the [latest release](https://github.com/bielarusajed/share
 
 Publishing a GitHub release automatically builds a signed release APK and attaches it, along with a SHA-256 checksum, to that release. The release tag must match `versionName` in `app/build.gradle.kts`, prefixed with `v`, for example `v1.0.0`. For each new version, update `versionName` and increase `versionCode` before creating the tag and publishing the release.
 
+To rebuild assets for an existing release, manually run the **Release APK** workflow from `main` and enter its release tag. This builds the code at that tag and replaces the APK and checksum on the existing release.
+
 The release workflow uses two repository Actions secrets:
 
 - `ANDROID_KEYSTORE_BASE64`: the base64-encoded release keystore, with a key named `release`.
